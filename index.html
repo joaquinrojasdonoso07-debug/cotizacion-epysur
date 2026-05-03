@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Epysur</title>
+    <style>
+        /* CSS para eliminar encabezados y pies de página automáticos del navegador */
+        @page {
+            size: letter;
+            margin: 0; /* Esto elimina la URL y fecha que pone el navegador arriba/abajo */
+        }
+
+        :root {
+            --rojo-epysur: #A61F1F;
+            --gris-claro: #f8f8f8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #555;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Contenedor Tamaño Carta */
+        .page {
+            width: 8.5in;
+            min-height: 11in;
+            background: white;
+            padding: 50pt; /* Margen real del documento */
+            box-sizing: border-box;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--rojo-epysur);
+            padding-bottom: 15pt;
+            margin-bottom: 30pt;
+        }
+
+        .logo-box h1 {
+            color: var(--rojo-epysur);
+            margin: 0;
+            font-size: 32pt;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .doc-tag {
+            background-color: var(--rojo-epysur);
+            color: white;
+            padding: 8pt 20pt;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Datos */
+        .grid-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20pt;
+            margin-bottom: 30pt;
+        }
+
+        .card {
+            background: var(--gris-claro);
+            padding: 12pt;
+            border-radius: 5px;
+        }
+
+        .card label {
+            display: block;
+            font-size: 9pt;
+            color: var(--rojo-epysur);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5pt;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            border-bottom: 1px solid #ccc;
+            padding: 3pt 0;
+            font-size: 10pt;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--rojo-epysur);
+            color: white;
+            padding: 10pt;
+            text-align: left;
+            font-size: 9pt;
+        }
+
+        td {
+            padding: 10pt;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary {
+            margin-left: auto;
+            width: 200pt;
+            margin-top: 30pt;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5pt 0;
+        }
+
+        .total-row {
+            border-top: 2px solid var(--rojo-epysur);
+            color: var(--rojo-epysur);
+            font-weight: bold;
+            font-size: 15pt;
+            padding-top: 10pt;
+        }
+
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 9pt;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20pt;
+        }
+
+        /* No imprimibles */
+        .no-print-area {
+            position: fixed;
+            bottom: 20pt;
+            right: 20pt;
+            z-index: 100;
+        }
+
+        .btn {
+            background: var(--rojo-epysur);
+            color: white;
+            padding: 15pt 30pt;
+            border: none;
+            border-radius: 50pt;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5pt 15pt rgba(0,0,0,0.3);
+        }
+
+        @media print {
+            body { background: white; }
+            .page { box-shadow: none; margin: 0; }
+            .no-print-area, .btn-add { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <div class="header">
+        <div class="logo-box">
+            <h1>EPYSUR.CL</h1>
+            <p style="margin:0; font-size: 10pt; color: #666;">SOLUCIONES DE CALEFACCIÓN</p>
+        </div>
+        <div class="doc-tag">Cotización</div>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 20pt; font-weight: bold;">
+        Fecha: <input type="date" id="fecha" style="width: 120pt; font-weight: bold; color: var(--rojo-epysur);">
+    </div>
+
+    <div class="grid-info">
+        <div class="card">
+            <label>Datos del Cliente</label>
+            <input type="text" placeholder="Nombre o Razón Social">
+            <input type="text" placeholder="RUT" style="margin-top:8pt;">
+        </div>
+        <div class="card">
+            <label>Ubicación</label>
+            <input type="text" placeholder="Dirección del Servicio">
+            <input type="text" placeholder="Ciudad" style="margin-top:8pt;">
+        </div>
+    </div>
+
+    <table id="items">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th style="text-align:center;">Cant.</th>
+                <th style="text-align:right;">Neto</th>
+                <th style="text-align:right;">c/IVA</th>
+                <th style="text-align:right;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" style="width:100%; border:none;" placeholder="Servicio..."></td>
+                <td style="width:40pt;"><input type="number" class="qty" value="1" oninput="calc()" style="text-align:center;"></td>
+                <td style="width:70pt;"><input type="number" class="price" value="0" oninput="calc()" style="text-align:right;"></td>
+                <td class="unit-iva" style="text-align:right; color:#888;">$0</td>
+                <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn-add" onclick="addRow()" style="width:100%; margin-top:10pt; background:#eee; border:1px dashed #aaa; padding:10pt; cursor:pointer;">+ AGREGAR ITEM</button>
+
+    <div class="summary">
+        <div class="summary-row">
+            <span>Subtotal Neto:</span>
+            <span id="neto">$0</span>
+        </div>
+        <div class="summary-row">
+            <span>IVA (19%):</span>
+            <span id="iva">$0</span>
+        </div>
+        <div class="summary-row total-row">
+            <span>TOTAL:</span>
+            <span id="total">$0</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>EPYSUR.CL - Mantenimiento y Deshollinado Profesional</p>
+        <p>Validez: 15 días. Precios expresados en Pesos Chilenos (CLP).</p>
+    </div>
+</div>
+
+<div class="no-print-area">
+    <button class="btn" onclick="window.print()">GENERAR PDF LIMPIO</button>
+</div>
+
+<script>
+    document.getElementById('fecha').valueAsDate = new Date();
+
+    function addRow() {
+        const table = document.getElementById("items").getElementsByTagName('tbody')[0];
+        const row = table.insertRow();
+        row.innerHTML = `
+            <td><input type="text" style="width:100%; border:none;" placeholder="..."></td>
+            <td><input type="number" class="qty" value="1" oninput="calc()" style="text-align:center;"></td>
+            <td><input type="number" class="price" value="0" oninput="calc()" style="text-align:right;"></td>
+            <td class="unit-iva" style="text-align:right; color:#888;">$0</td>
+            <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
+        `;
+    }
+
+    function calc() {
+        let netoAcumulado = 0;
+        const rows = document.querySelectorAll("#items tbody tr");
+        rows.forEach(r => {
+            const q = parseFloat(r.querySelector(".qty").value) || 0;
+            const p = parseFloat(r.querySelector(".price").value) || 0;
+            const unitIva = Math.round(p * 1.19);
+            const sub = q * p;
+            
+            r.querySelector(".unit-iva").innerText = "$" + unitIva.toLocaleString('es-CL');
+            r.querySelector(".row-total").innerText = "$" + sub.toLocaleString('es-CL');
+            netoAcumulado += sub;
+        });
+
+        const iva = Math.round(netoAcumulado * 0.19);
+        const total = netoAcumulado + iva;
+
+        document.getElementById("neto").innerText = "$" + netoAcumulado.toLocaleString('es-CL');
+        document.getElementById("iva").innerText = "$" + iva.toLocaleString('es-CL');
+        document.getElementById("total").innerText = "$" + total.toLocaleString('es-CL');
+    }
+</script>
+
+</body>
+</html>
