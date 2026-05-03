@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotizador Epysur - Oficial</title>
     <style>
-        /* Elimina encabezados y pies de página automáticos del navegador */
         @page {
             size: letter;
             margin: 0;
         }
 
         :root {
-            --rojo-epysur: #A61F1F; /* Color basado en el logo de deshollinado[cite: 1, 3] */
+            --rojo-epysur: #A61F1F;
             --gris-claro: #f8f8f8;
         }
 
@@ -25,60 +24,73 @@
             justify-content: center;
         }
 
-        /* Contenedor Tamaño Carta[cite: 3] */
+        /* Cambios para Responsividad */
         .page {
-            width: 8.5in;
+            width: 100%; /* Ocupa todo el ancho en móvil */
+            max-width: 8.5in; /* Límite tamaño carta en PC */
             min-height: 11in;
             background: white;
-            padding: 50pt;
+            padding: 5vw; /* Padding proporcional */
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
         }
 
+        /* Ajustes de encabezado para móvil */
         .header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column; /* Apilado en móvil */
             align-items: center;
+            text-align: center;
             border-bottom: 4px solid var(--rojo-epysur);
             padding-bottom: 15pt;
-            margin-bottom: 25pt;
+            margin-bottom: 20pt;
+            gap: 15pt;
+        }
+
+        @media (min-width: 600px) {
+            .header {
+                flex-direction: row; /* Horizontal en PC */
+                justify-content: space-between;
+                text-align: left;
+            }
+            .page { padding: 50pt; }
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15pt;
+            gap: 10pt;
         }
 
-        .logo-img {
-            height: 80pt; /* Ajuste para que el logo luzca profesional[cite: 3] */
-            width: auto;
-        }
+        .logo-img { height: 60pt; width: auto; }
 
         .logo-text h1 {
             color: var(--rojo-epysur);
             margin: 0;
-            font-size: 28pt;
+            font-size: 22pt;
             font-weight: 900;
         }
 
         .doc-tag {
             background-color: var(--rojo-epysur);
             color: white;
-            padding: 10pt 25pt;
+            padding: 8pt 20pt;
             border-radius: 5px;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 14pt;
         }
 
         .grid-info {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20pt;
-            margin-bottom: 30pt;
+            grid-template-columns: 1fr; /* Una columna en móvil */
+            gap: 15pt;
+            margin-bottom: 20pt;
+        }
+
+        @media (min-width: 600px) {
+            .grid-info { grid-template-columns: 1fr 1fr; }
         }
 
         .card {
@@ -89,47 +101,48 @@
 
         .card label {
             display: block;
-            font-size: 9pt;
+            font-size: 8pt;
             color: var(--rojo-epysur);
             font-weight: bold;
-            text-transform: uppercase;
             margin-bottom: 5pt;
         }
+
+        /* Contenedor de tabla con scroll horizontal para móvil */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 500px; /* Evita que se colapsen las columnas */
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--rojo-epysur);
+            color: white;
+            padding: 8pt;
+            font-size: 8pt;
+        }
+
+        td { padding: 8pt; border-bottom: 1px solid #eee; }
 
         input {
             width: 100%;
             border: none;
             background: transparent;
             border-bottom: 1px solid #ccc;
-            padding: 3pt 0;
+            padding: 5pt 0;
             font-size: 10pt;
-            outline: none;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 10pt;
-        }
-
-        th {
-            background: var(--rojo-epysur);
-            color: white;
-            padding: 10pt;
-            text-align: left;
-            font-size: 9pt;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 10pt;
-            border-bottom: 1px solid #eee;
         }
 
         .summary {
             margin-left: auto;
-            width: 220pt;
-            margin-top: 30pt;
+            width: 100%;
+            max-width: 220pt;
+            margin-top: 20pt;
         }
 
         .summary-row {
@@ -142,43 +155,40 @@
             border-top: 2px solid var(--rojo-epysur);
             color: var(--rojo-epysur);
             font-weight: bold;
-            font-size: 16pt;
-            padding-top: 10pt;
+            font-size: 14pt;
         }
 
-        .footer {
-            margin-top: auto;
-            text-align: center;
-            font-size: 9pt;
-            color: #777;
-            border-top: 1px solid #eee;
-            padding-top: 20pt;
-        }
-
-        /* Controles de la App (No se imprimen)[cite: 3] */
         .app-controls {
             position: fixed;
-            bottom: 20pt;
-            right: 20pt;
+            bottom: 10pt;
+            left: 0;
+            width: 100%;
             display: flex;
-            gap: 10pt;
+            justify-content: center;
+            padding: 10pt;
+            box-sizing: border-box;
+            pointer-events: none; /* Permite que el click pase si no es el botón */
         }
 
         .btn {
+            pointer-events: auto;
             background: var(--rojo-epysur);
             color: white;
-            padding: 12pt 25pt;
+            padding: 12pt 30pt;
             border: none;
             border-radius: 50pt;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4pt 12pt rgba(0,0,0,0.3);
+            box-shadow: 0 4pt 15pt rgba(0,0,0,0.4);
+            width: 90%;
+            max-width: 300px;
         }
 
         @media print {
             body { background: white; }
-            .page { box-shadow: none; margin: 0; }
+            .page { box-shadow: none; margin: 0; width: 8.5in; padding: 50pt; }
             .app-controls, .btn-add { display: none !important; }
+            .table-responsive { overflow: visible; }
         }
     </style>
 </head>
@@ -187,55 +197,55 @@
 <div class="page">
     <div class="header">
         <div class="logo-container">
-            <!-- Logo proporcionado por el usuario -->
-            <img src="logo.png" alt="Logo Epysur" class="logo-img">
+            <img src="logo.png" alt="Logo" class="logo-img">
             <div class="logo-text">
                 <h1>EPYSUR.CL</h1>
-                <p style="margin:0; font-size: 10pt; color: #666; letter-spacing: 1px;">SOLUCIONES DE CALEFACCIÓN</p>
+                <p style="margin:0; font-size: 9pt; color: #666;">SOLUCIONES DE CALEFACCIÓN</p>
             </div>
         </div>
         <div class="doc-tag">Cotización</div>
     </div>
 
-    <div style="text-align: right; margin-bottom: 20pt; font-weight: bold;">
-        Fecha: <input type="date" id="fecha" style="width: 110pt; font-weight: bold; color: var(--rojo-epysur);">
+    <div style="text-align: right; margin-bottom: 15pt;">
+        <label style="font-size: 9pt;">Fecha:</label>
+        <input type="date" id="fecha" style="width: 100pt; font-weight: bold; color: var(--rojo-epysur); border:none;">
     </div>
 
     <div class="grid-info">
         <div class="card">
-            <label>Información del Cliente</label>
-            <input type="text" placeholder="Nombre o Razón Social">
-            <input type="text" placeholder="RUT" style="margin-top:8pt;">
+            <label>CLIENTE</label>
+            <input type="text" placeholder="Nombre / Razón Social">
+            <input type="text" placeholder="RUT" style="margin-top:5pt;">
         </div>
         <div class="card">
-            <label>Ubicación del Servicio</label>
-            <input type="text" placeholder="Dirección Completa">
-            <input type="text" placeholder="Ciudad / Región" style="margin-top:8pt;">
+            <label>UBICACIÓN</label>
+            <input type="text" placeholder="Dirección">
+            <input type="text" placeholder="Ciudad" style="margin-top:5pt;">
         </div>
     </div>
 
-    <table id="tabla-items">
-        <thead>
-            <tr>
-                <th style="width: 40%;">Descripción</th>
-                <th style="text-align:center;">Cant.</th>
-                <th style="text-align:right;">Neto Unit.</th>
-                <th style="text-align:right;">c/IVA Unit.</th>
-                <th style="text-align:right;">Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><input type="text" style="width:100%; border:none;" placeholder="Servicio o Producto..."></td>
-                <td style="width:40pt;"><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center; border:none;"></td>
-                <td style="width:70pt;"><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right; border:none;"></td>
-                <td class="unit-iva" style="text-align:right; color:#777;">$0</td>
-                <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="tabla-items">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Descripción</th>
+                    <th style="text-align:center;">Cant.</th>
+                    <th style="text-align:right;">Neto Unit.</th>
+                    <th style="text-align:right;">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" placeholder="Servicio..."></td>
+                    <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
+                    <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
+                    <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:15pt; background:#eee; border:1px dashed #aaa; padding:10pt; cursor:pointer;">+ AGREGAR ITEM</button>
+    <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:10pt; background:#eee; border:1px dashed #aaa; padding:10pt; border-radius:5px;">+ AGREGAR ITEM</button>
 
     <div class="summary">
         <div class="summary-row">
@@ -252,28 +262,26 @@
         </div>
     </div>
 
-    <div class="footer">
+    <div class="footer" style="margin-top:30pt; text-align:center; font-size:8pt; color:#888; border-top:1px solid #eee; padding-top:10pt;">
         <p>EPYSUR.CL - Mantenimiento y Deshollinado Profesional</p>
-        <p>Documento informativo sin valor tributario. Válido por 15 días.</p>
+        <p>Válido por 15 días.</p>
     </div>
 </div>
 
 <div class="app-controls">
-    <button class="btn" onclick="window.print()">GENERAR PDF / IMPRIMIR</button>
+    <button class="btn" onclick="window.print()">DESCARGAR / IMPRIMIR</button>
 </div>
 
 <script>
-    // Setea la fecha actual automáticamente
     document.getElementById('fecha').valueAsDate = new Date();
 
     function agregarFila() {
         const table = document.getElementById("tabla-items").getElementsByTagName('tbody')[0];
         const row = table.insertRow();
         row.innerHTML = `
-            <td><input type="text" style="width:100%; border:none;" placeholder="..."></td>
-            <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center; border:none;"></td>
-            <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right; border:none;"></td>
-            <td class="unit-iva" style="text-align:right; color:#777;">$0</td>
+            <td><input type="text" placeholder="..."></td>
+            <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
+            <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
             <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
         `;
     }
@@ -285,13 +293,8 @@
         rows.forEach(r => {
             const q = parseFloat(r.querySelector(".qty").value) || 0;
             const p = parseFloat(r.querySelector(".price").value) || 0;
-            
-            const unitIva = Math.round(p * 1.19);
             const subtotal = q * p;
-            
-            r.querySelector(".unit-iva").innerText = "$" + unitIva.toLocaleString('es-CL');
             r.querySelector(".row-total").innerText = "$" + subtotal.toLocaleString('es-CL');
-            
             netoAcumulado += subtotal;
         });
 
