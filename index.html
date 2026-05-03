@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Epysur</title>
+    <title>Cotizador Epysur - Oficial</title>
     <style>
-        /* CSS para eliminar encabezados y pies de página automáticos del navegador */
+        /* Elimina encabezados y pies de página automáticos del navegador */
         @page {
             size: letter;
-            margin: 0; /* Esto elimina la URL y fecha que pone el navegador arriba/abajo */
+            margin: 0;
         }
 
         :root {
-            --rojo-epysur: #A61F1F;
+            --rojo-epysur: #A61F1F; /* Color basado en el logo de deshollinado[cite: 1, 3] */
             --gris-claro: #f8f8f8;
         }
 
@@ -25,12 +25,12 @@
             justify-content: center;
         }
 
-        /* Contenedor Tamaño Carta */
+        /* Contenedor Tamaño Carta[cite: 3] */
         .page {
             width: 8.5in;
             min-height: 11in;
             background: white;
-            padding: 50pt; /* Margen real del documento */
+            padding: 50pt;
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(0,0,0,0.3);
             display: flex;
@@ -43,27 +43,37 @@
             align-items: center;
             border-bottom: 4px solid var(--rojo-epysur);
             padding-bottom: 15pt;
-            margin-bottom: 30pt;
+            margin-bottom: 25pt;
         }
 
-        .logo-box h1 {
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15pt;
+        }
+
+        .logo-img {
+            height: 80pt; /* Ajuste para que el logo luzca profesional[cite: 3] */
+            width: auto;
+        }
+
+        .logo-text h1 {
             color: var(--rojo-epysur);
             margin: 0;
-            font-size: 32pt;
+            font-size: 28pt;
             font-weight: 900;
-            letter-spacing: -1px;
         }
 
         .doc-tag {
             background-color: var(--rojo-epysur);
             color: white;
-            padding: 8pt 20pt;
+            padding: 10pt 25pt;
             border-radius: 5px;
             font-weight: bold;
             text-transform: uppercase;
+            font-size: 14pt;
         }
 
-        /* Datos */
         .grid-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -93,12 +103,13 @@
             border-bottom: 1px solid #ccc;
             padding: 3pt 0;
             font-size: 10pt;
+            outline: none;
         }
 
-        /* Tabla */
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 10pt;
         }
 
         th {
@@ -107,6 +118,7 @@
             padding: 10pt;
             text-align: left;
             font-size: 9pt;
+            text-transform: uppercase;
         }
 
         td {
@@ -116,7 +128,7 @@
 
         .summary {
             margin-left: auto;
-            width: 200pt;
+            width: 220pt;
             margin-top: 30pt;
         }
 
@@ -130,7 +142,7 @@
             border-top: 2px solid var(--rojo-epysur);
             color: var(--rojo-epysur);
             font-weight: bold;
-            font-size: 15pt;
+            font-size: 16pt;
             padding-top: 10pt;
         }
 
@@ -143,29 +155,30 @@
             padding-top: 20pt;
         }
 
-        /* No imprimibles */
-        .no-print-area {
+        /* Controles de la App (No se imprimen)[cite: 3] */
+        .app-controls {
             position: fixed;
             bottom: 20pt;
             right: 20pt;
-            z-index: 100;
+            display: flex;
+            gap: 10pt;
         }
 
         .btn {
             background: var(--rojo-epysur);
             color: white;
-            padding: 15pt 30pt;
+            padding: 12pt 25pt;
             border: none;
             border-radius: 50pt;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5pt 15pt rgba(0,0,0,0.3);
+            box-shadow: 0 4pt 12pt rgba(0,0,0,0.3);
         }
 
         @media print {
             body { background: white; }
             .page { box-shadow: none; margin: 0; }
-            .no-print-area, .btn-add { display: none !important; }
+            .app-controls, .btn-add { display: none !important; }
         }
     </style>
 </head>
@@ -173,113 +186,121 @@
 
 <div class="page">
     <div class="header">
-        <div class="logo-box">
-            <h1>EPYSUR.CL</h1>
-            <p style="margin:0; font-size: 10pt; color: #666;">SOLUCIONES DE CALEFACCIÓN</p>
+        <div class="logo-container">
+            <!-- Logo proporcionado por el usuario -->
+            <img src="https://images.clothes.com/v1/mms/v2/71e06927-4c07-427f-9457-195971434c4f.jpg" alt="Logo Epysur" class="logo-img">
+            <div class="logo-text">
+                <h1>EPYSUR.CL</h1>
+                <p style="margin:0; font-size: 10pt; color: #666; letter-spacing: 1px;">SOLUCIONES DE CALEFACCIÓN</p>
+            </div>
         </div>
         <div class="doc-tag">Cotización</div>
     </div>
 
     <div style="text-align: right; margin-bottom: 20pt; font-weight: bold;">
-        Fecha: <input type="date" id="fecha" style="width: 120pt; font-weight: bold; color: var(--rojo-epysur);">
+        Fecha: <input type="date" id="fecha" style="width: 110pt; font-weight: bold; color: var(--rojo-epysur);">
     </div>
 
     <div class="grid-info">
         <div class="card">
-            <label>Datos del Cliente</label>
+            <label>Información del Cliente</label>
             <input type="text" placeholder="Nombre o Razón Social">
             <input type="text" placeholder="RUT" style="margin-top:8pt;">
         </div>
         <div class="card">
-            <label>Ubicación</label>
-            <input type="text" placeholder="Dirección del Servicio">
-            <input type="text" placeholder="Ciudad" style="margin-top:8pt;">
+            <label>Ubicación del Servicio</label>
+            <input type="text" placeholder="Dirección Completa">
+            <input type="text" placeholder="Ciudad / Región" style="margin-top:8pt;">
         </div>
     </div>
 
-    <table id="items">
+    <table id="tabla-items">
         <thead>
             <tr>
-                <th>Descripción</th>
+                <th style="width: 40%;">Descripción</th>
                 <th style="text-align:center;">Cant.</th>
-                <th style="text-align:right;">Neto</th>
-                <th style="text-align:right;">c/IVA</th>
+                <th style="text-align:right;">Neto Unit.</th>
+                <th style="text-align:right;">c/IVA Unit.</th>
                 <th style="text-align:right;">Subtotal</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><input type="text" style="width:100%; border:none;" placeholder="Servicio..."></td>
-                <td style="width:40pt;"><input type="number" class="qty" value="1" oninput="calc()" style="text-align:center;"></td>
-                <td style="width:70pt;"><input type="number" class="price" value="0" oninput="calc()" style="text-align:right;"></td>
-                <td class="unit-iva" style="text-align:right; color:#888;">$0</td>
+                <td><input type="text" style="width:100%; border:none;" placeholder="Servicio o Producto..."></td>
+                <td style="width:40pt;"><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center; border:none;"></td>
+                <td style="width:70pt;"><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right; border:none;"></td>
+                <td class="unit-iva" style="text-align:right; color:#777;">$0</td>
                 <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
             </tr>
         </tbody>
     </table>
 
-    <button class="btn-add" onclick="addRow()" style="width:100%; margin-top:10pt; background:#eee; border:1px dashed #aaa; padding:10pt; cursor:pointer;">+ AGREGAR ITEM</button>
+    <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:15pt; background:#eee; border:1px dashed #aaa; padding:10pt; cursor:pointer;">+ AGREGAR ITEM</button>
 
     <div class="summary">
         <div class="summary-row">
-            <span>Subtotal Neto:</span>
-            <span id="neto">$0</span>
+            <span>Neto:</span>
+            <span id="res-neto">$0</span>
         </div>
         <div class="summary-row">
             <span>IVA (19%):</span>
-            <span id="iva">$0</span>
+            <span id="res-iva">$0</span>
         </div>
         <div class="summary-row total-row">
             <span>TOTAL:</span>
-            <span id="total">$0</span>
+            <span id="res-total">$0</span>
         </div>
     </div>
 
     <div class="footer">
         <p>EPYSUR.CL - Mantenimiento y Deshollinado Profesional</p>
-        <p>Validez: 15 días. Precios expresados en Pesos Chilenos (CLP).</p>
+        <p>Documento informativo sin valor tributario. Válido por 15 días.</p>
     </div>
 </div>
 
-<div class="no-print-area">
-    <button class="btn" onclick="window.print()">GENERAR PDF LIMPIO</button>
+<div class="app-controls">
+    <button class="btn" onclick="window.print()">GENERAR PDF / IMPRIMIR</button>
 </div>
 
 <script>
+    // Setea la fecha actual automáticamente
     document.getElementById('fecha').valueAsDate = new Date();
 
-    function addRow() {
-        const table = document.getElementById("items").getElementsByTagName('tbody')[0];
+    function agregarFila() {
+        const table = document.getElementById("tabla-items").getElementsByTagName('tbody')[0];
         const row = table.insertRow();
         row.innerHTML = `
             <td><input type="text" style="width:100%; border:none;" placeholder="..."></td>
-            <td><input type="number" class="qty" value="1" oninput="calc()" style="text-align:center;"></td>
-            <td><input type="number" class="price" value="0" oninput="calc()" style="text-align:right;"></td>
-            <td class="unit-iva" style="text-align:right; color:#888;">$0</td>
+            <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center; border:none;"></td>
+            <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right; border:none;"></td>
+            <td class="unit-iva" style="text-align:right; color:#777;">$0</td>
             <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
         `;
     }
 
-    function calc() {
+    function calcular() {
         let netoAcumulado = 0;
-        const rows = document.querySelectorAll("#items tbody tr");
+        const rows = document.querySelectorAll("#tabla-items tbody tr");
+        
         rows.forEach(r => {
             const q = parseFloat(r.querySelector(".qty").value) || 0;
             const p = parseFloat(r.querySelector(".price").value) || 0;
+            
             const unitIva = Math.round(p * 1.19);
-            const sub = q * p;
+            const subtotal = q * p;
             
             r.querySelector(".unit-iva").innerText = "$" + unitIva.toLocaleString('es-CL');
-            r.querySelector(".row-total").innerText = "$" + sub.toLocaleString('es-CL');
-            netoAcumulado += sub;
+            r.querySelector(".row-total").innerText = "$" + subtotal.toLocaleString('es-CL');
+            
+            netoAcumulado += subtotal;
         });
 
-        const iva = Math.round(netoAcumulado * 0.19);
-        const total = netoAcumulado + iva;
+        const ivaTotal = Math.round(netoAcumulado * 0.19);
+        const totalFinal = netoAcumulado + ivaTotal;
 
-        document.getElementById("neto").innerText = "$" + netoAcumulado.toLocaleString('es-CL');
-        document.getElementById("iva").innerText = "$" + iva.toLocaleString('es-CL');
-        document.getElementById("total").innerText = "$" + total.toLocaleString('es-CL');
+        document.getElementById("res-neto").innerText = "$" + netoAcumulado.toLocaleString('es-CL');
+        document.getElementById("res-iva").innerText = "$" + ivaTotal.toLocaleString('es-CL');
+        document.getElementById("res-total").innerText = "$" + totalFinal.toLocaleString('es-CL');
     }
 </script>
 
