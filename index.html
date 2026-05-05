@@ -3,93 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cotizador Epysur Pro</title>
+    <title>Cotizador Epysur - Profesional</title>
     <style>
-        :root { --rojo: #A61F1F; --fondo: #f4f7f6; --texto: #333; --blanco: #ffffff; }
-
-        @page { size: letter; margin: 1.5cm; }
+        :root { --rojo: #A61F1F; --gris: #f4f7f6; --texto: #333; }
+        @page { size: letter; margin: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--fondo); color: var(--texto); margin: 0; padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #555; color: var(--texto); margin: 0; padding: 0;
             display: flex; justify-content: center;
         }
 
         .page-container {
-            width: 100%; max-width: 800px; background: var(--blanco);
-            min-height: 100vh; padding: 20px; box-sizing: border-box;
-            display: flex; flex-direction: column; padding-bottom: 100px;
+            width: 100%; max-width: 8.5in; background: white;
+            min-height: 11in; padding: 40pt; box-sizing: border-box;
+            display: flex; flex-direction: column; position: relative;
         }
 
-        /* Header */
+        /* --- CABECERA --- */
         .header {
-            border-bottom: 3px solid var(--rojo); padding-bottom: 15px; margin-bottom: 20px;
-            display: flex; flex-direction: column; gap: 15px;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 3px solid var(--rojo); padding-bottom: 10pt; margin-bottom: 20pt;
+        }
+        .logo-section { display: flex; align-items: center; gap: 15pt; }
+        .logo-img { height: 60pt; width: auto; }
+        .logo-text h1 { color: var(--rojo); margin: 0; font-size: 24pt; font-weight: 900; }
+        .logo-text p { margin: 0; font-size: 9pt; letter-spacing: 1px; color: #666; }
+
+        .cotizacion-id { text-align: right; }
+        .cotizacion-id label { display: block; font-size: 9pt; font-weight: bold; color: #555; }
+        .cotizacion-id input { 
+            font-size: 14pt; font-weight: bold; color: var(--rojo); 
+            text-align: right; border: none; background: transparent; width: 150px;
         }
 
-        .logo-box { display: flex; align-items: center; gap: 12px; }
-        .logo-img { height: 50px; width: auto; }
-        .logo-text h1 { color: var(--rojo); margin: 0; font-size: 22px; font-weight: 900; }
-        
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .input-group input, .input-group textarea {
-            width: 100%; border: 1px solid #ddd; background: #fdfdfd;
-            padding: 12px; font-size: 16px; border-radius: 8px; box-sizing: border-box;
-        }
+        /* --- OCULTAR FLECHAS Y CALENDARIO --- */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
 
-        /* VISTA CELULAR (Tarjetas) */
-        .item-card {
-            background: #fff; border: 1px solid #eee; border-radius: 12px;
-            padding: 15px; margin-bottom: 15px; position: relative;
-        }
-        .item-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .row-total-box {
-            grid-column: span 2; text-align: right; border-top: 1px dashed #eee;
-            padding-top: 10px; font-weight: 800; color: var(--rojo); font-size: 18px;
-        }
-        .btn-delete {
-            position: absolute; top: -10px; right: -10px; background: #000; color: #fff;
-            border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer;
-        }
+        /* --- INFO CLIENTE --- */
+        .info-block { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30pt; margin-bottom: 20pt; }
+        .input-group { margin-bottom: 12pt; }
+        .input-group label { display: block; font-size: 8pt; font-weight: bold; color: #555; text-transform: uppercase; margin-bottom: 3pt; }
+        .input-group input { width: 100%; border: 1px solid #eee; background: #fcfcfc; padding: 7pt; font-size: 10pt; border-radius: 3px; box-sizing: border-box; }
 
-        /* VISTA IMPRESIÓN (Tabla oculta en pantalla) */
-        .print-table { display: none; width: 100%; border-collapse: collapse; margin: 20px 0; }
-        .print-table th { background: var(--rojo); color: white; padding: 8pt; text-align: left; font-size: 10pt; }
-        .print-table td { padding: 8pt; border-bottom: 1px solid #eee; font-size: 10pt; vertical-align: top; }
+        /* --- TABLA --- */
+        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20pt; }
+        .items-table th { background: var(--rojo); color: white; padding: 10pt; text-align: left; font-size: 9pt; }
+        .items-table td { padding: 8pt; border-bottom: 1px solid #eee; vertical-align: top; }
+        .desc-cell textarea { width: 100%; border: none; background: transparent; font-family: inherit; font-size: 10pt; resize: none; overflow: hidden; }
 
-        /* Resumen */
-        .summary-box { background: #222; color: #fff; padding: 20px; border-radius: 12px; margin-top: 20px; }
-        .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-        .summary-total { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; font-size: 20px; font-weight: 900; }
+        /* --- TOTALES Y OBS --- */
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20pt; margin-top: auto; }
+        .summary-table { width: 100%; background: #f9f9f9; padding: 10pt; border-radius: 5px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 5pt 0; font-size: 10pt; }
+        .total-row { border-top: 2px solid var(--rojo); color: var(--rojo); font-weight: bold; font-size: 16pt; padding-top: 8pt; }
+        .obs-box textarea { width: 100%; height: 70pt; border: 1px solid #eee; padding: 5pt; font-size: 9pt; background: #fcfcfc; border-radius: 3px; resize: none; }
+        .char-count { font-size: 7pt; color: #999; text-align: right; }
 
-        .app-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 1000; }
-        .btn { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: 800; font-size: 14px; cursor: pointer; }
-        .btn-pdf { background: var(--rojo); color: #fff; }
-        .btn-clear { background: #eee; color: #666; }
-        .btn-add { background: #f4f4f4; border: 2px dashed #ccc; color: #666; margin-top: 10px; width: 100%; padding: 15px; border-radius: 10px; }
+        /* --- CONTROLES --- */
+        .app-controls { position: fixed; bottom: 20pt; left: 50%; transform: translateX(-50%); display: flex; gap: 10pt; z-index: 1000; }
+        .btn { padding: 12pt 25pt; border-radius: 50pt; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 5pt 15pt rgba(0,0,0,0.3); }
+        .btn-pdf { background: var(--rojo); color: white; }
+        .btn-clear { background: #333; color: white; }
+        .btn-add-row { background: #eee; border: 1px dashed #999; width: 100%; padding: 8pt; cursor: pointer; margin-bottom: 20pt; font-weight: bold; }
 
-        @media (min-width: 768px) {
-            .page-container { margin: 30px; border-radius: 15px; padding: 50px; height: auto; }
-            .header { flex-direction: row; align-items: flex-end; }
-            .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .app-bar { position: static; box-shadow: none; padding: 20px 0; }
-        }
-
-        /* --- MAGIA PARA LA IMPRESIÓN --- */
         @media print {
-            html, body { height: auto; background: #fff; margin: 0 !important; }
-            .page-container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
-            .app-bar, .btn-add, .btn-delete, #items-container { display: none !important; }
-            
-            /* Mostramos la tabla solo al imprimir */
-            .print-table { display: table !important; }
-            .summary-box { background: transparent !important; color: #000 !important; border: 1px solid #eee; break-inside: avoid; }
-            .summary-total { color: var(--rojo) !important; border-top: 2px solid var(--rojo) !important; }
-            .summary-line { color: #000 !important; }
-            
-            input, textarea { border: none !important; background: transparent !important; padding: 2px 0 !important; font-size: 10pt !important; }
-            .logo-img { height: 60pt !important; }
+            body { background: white; }
+            .page-container { box-shadow: none; padding: 40pt; height: 11in; }
+            .app-controls, .btn-add-row { display: none !important; }
+            .header { border-bottom: 3pt solid var(--rojo) !important; }
+            .summary-table { background: #f9f9f9 !important; -webkit-print-color-adjust: exact; }
+            input[type="date"]::-webkit-calendar-picker-indicator { display: none; -webkit-appearance: none; }
+            input, textarea { border: none !important; background: transparent !important; padding: 0 !important; }
+            .legal-footer { position: absolute; bottom: 40pt; left: 0; right: 0; text-align: center; font-size: 8pt; color: #aaa; }
         }
     </style>
 </head>
@@ -97,129 +85,111 @@
 
 <div class="page-container">
     <div class="header">
-        <div class="logo-box">
+        <div class="logo-section">
             <img src="logo.png" alt="Logo" class="logo-img">
             <div class="logo-text">
-                <h1>EPYSUR</h1>
-                <p style="margin:0; font-size: 8px; color: #888;">SOLUCIONES PARA TU HOGAR</p>
+                <h1>EPYSUR.CL</h1>
+                <p>SOLUCIONES DE CALEFACCIÓN</p>
             </div>
         </div>
-        <div class="input-group" style="margin-left: auto;">
-            <label>Cotización N°</label>
-            <input type="text" id="n-cotiz" placeholder="2026-001" style="font-weight: 900; color: var(--rojo); text-align: right; width: 120px;">
+        <div class="cotizacion-id">
+            <label>COTIZACIÓN N°</label>
+            <input type="text" placeholder="Ej: 2026-001">
         </div>
     </div>
 
-    <div class="grid-2">
-        <div class="input-group"><label>Cliente</label><input type="text" class="clearable"></div>
-        <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatearRut(this)"></div>
-        <div class="input-group"><label>Fecha</label><input type="date" id="fecha"></div>
-        <div class="input-group"><label>Dirección</label><input type="text" class="clearable"></div>
+    <div class="info-block">
+        <div>
+            <div class="input-group"><label>Nombre / Razón Social</label><input type="text" class="clearable"></div>
+            <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatRut(this)"></div>
+        </div>
+        <div>
+            <div class="input-group"><label>Fecha</label><input type="date" id="fecha-actual"></div>
+            <div class="input-group"><label>Dirección y Comuna</label><input type="text" class="clearable"></div>
+        </div>
     </div>
 
-    <!-- Contenedor de Tarjetas (Solo Celular/PC) -->
-    <div id="items-container"></div>
-    <button class="btn-add" onclick="agregarFila()">+ AGREGAR ITEM</button>
-
-    <!-- Tabla Escondida (Solo para el PDF) -->
-    <table class="print-table" id="tabla-pdf">
+    <table class="items-table" id="items-table">
         <thead>
             <tr>
                 <th style="width: 50%;">Descripción</th>
                 <th style="width: 10%; text-align: center;">Cant.</th>
-                <th style="width: 20%; text-align: right;">Neto Unit.</th>
+                <th style="width: 20%; text-align: right;">Unitario</th>
                 <th style="width: 20%; text-align: right;">Total</th>
             </tr>
         </thead>
-        <tbody id="tabla-pdf-body"></tbody>
+        <tbody>
+            <tr>
+                <td class="desc-cell"><textarea class="clearable" rows="1" oninput="autoSize(this)"></textarea></td>
+                <td><input type="number" class="qty" value="1" oninput="calc()" style="width:100%; text-align:center; border:none; background:transparent;"></td>
+                <td><input type="number" class="price" value="0" oninput="calc()" style="width:100%; text-align:right; border:none; background:transparent;"></td>
+                <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
+            </tr>
+        </tbody>
     </table>
+    <button class="btn-add-row" onclick="addRow()">+ AGREGAR ITEM</button>
 
-    <div class="summary-box">
-        <div class="summary-line"><span>Subtotal Neto:</span><span id="res-neto">$0</span></div>
-        <div class="summary-line"><span>IVA (19%):</span><span id="res-iva">$0</span></div>
-        <div class="summary-total"><span>TOTAL:</span><span id="res-total">$0</span></div>
+    <div class="footer-grid">
+        <div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 10pt;">
+                <div class="input-group"><label>Forma de Pago</label><input type="text" class="clearable" value="Transferencia"></div>
+                <div class="input-group"><label>Validez</label><input type="text" class="clearable" value="15 días"></div>
+            </div>
+            <div class="obs-box">
+                <label>Observaciones</label>
+                <textarea id="obs-text" class="clearable" maxlength="400" oninput="checkChars(this)"></textarea>
+                <div class="char-count"><span id="char-num">0</span> / 400</div>
+            </div>
+        </div>
+        <div class="summary-section">
+            <div class="summary-table">
+                <div class="summary-row"><span>Subtotal Neto:</span><span id="neto">$0</span></div>
+                <div class="summary-row"><span>IVA (19%):</span><span id="iva">$0</span></div>
+                <div class="summary-row total-row"><span>TOTAL:</span><span id="total">$0</span></div>
+            </div>
+        </div>
     </div>
 
-    <div style="margin-top: 20px;">
-        <div class="input-group"><label>Forma de Pago</label><input type="text" class="clearable" placeholder="Transferencia"></div>
-        <div class="input-group"><label>Observaciones</label><textarea class="clearable" oninput="autoExpand(this)"></textarea></div>
-    </div>
-
-    <div style="text-align: center; color: #bbb; font-size: 10px; margin-top: 30px;">Válido por 15 días.</div>
+    <div class="legal-footer">Este documento es una cotización informativa y no representa una factura legal.</div>
 </div>
 
-<div class="app-bar">
-    <button class="btn btn-clear" onclick="limpiarTodo()">Limpiar</button>
-    <button class="btn btn-pdf" onclick="prepararYImprimir()">Descargar PDF</button>
+<div class="app-controls">
+    <button class="btn btn-clear" onclick="location.reload()">LIMPIAR</button>
+    <button class="btn btn-pdf" onclick="window.print()">DESCARGAR PDF</button>
 </div>
 
 <script>
-    document.getElementById('fecha').valueAsDate = new Date();
-
-    function autoExpand(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
-    function formatearRut(i) {
+    document.getElementById('fecha-actual').valueAsDate = new Date();
+    function autoSize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
+    function checkChars(t) { document.getElementById('char-num').innerText = t.value.length; }
+    function formatRut(i) {
         let v = i.value.replace(/\./g, '').replace(/-/g, '');
         if (v.length < 2) return;
         let c = v.slice(0, -1).slice(0, 8);
         let d = v.slice(-1).toUpperCase();
         i.value = c.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + d;
     }
-
-    function agregarFila() {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <div class="input-group"><label>Descripción</label><textarea rows="2" class="desc clearable" oninput="autoExpand(this)"></textarea></div>
-            <div class="item-card-row">
-                <div class="input-group"><label>Cant.</label><input type="number" class="qty" value="1" oninput="calcular()"></div>
-                <div class="input-group"><label>Precio</label><input type="number" class="price" value="0" oninput="calcular()"></div>
-            </div>
-            <div class="row-total-box">Total: $0</div>
-            <button class="btn-delete" onclick="this.parentElement.remove(); calcular();">✕</button>`;
-        document.getElementById('items-container').appendChild(div);
+    function addRow() {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="desc-cell"><textarea class="clearable" rows="1" oninput="autoSize(this)"></textarea></td>
+            <td><input type="number" class="qty" value="1" oninput="calc()" style="width:100%; text-align:center; border:none; background:transparent;"></td>
+            <td><input type="number" class="price" value="0" oninput="calc()" style="width:100%; text-align:right; border:none; background:transparent;"></td>
+            <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>`;
+        document.querySelector('#items-table tbody').appendChild(tr);
     }
-
-    function calcular() {
-        let neto = 0;
-        document.querySelectorAll('.item-card').forEach(card => {
-            const q = parseFloat(card.querySelector('.qty').value) || 0;
-            const p = parseFloat(card.querySelector('.price').value) || 0;
-            const sub = Math.round(q * p);
-            card.querySelector('.row-total-box').innerText = "Total: $" + sub.toLocaleString('es-CL');
-            neto += sub;
+    function calc() {
+        let n = 0;
+        document.querySelectorAll('#items-table tbody tr').forEach(r => {
+            const q = parseFloat(r.querySelector('.qty').value) || 0;
+            const p = parseFloat(r.querySelector('.price').value) || 0;
+            const s = Math.round(q * p);
+            r.querySelector('.row-total').innerText = "$" + s.toLocaleString('es-CL');
+            n += s;
         });
-        document.getElementById('res-neto').innerText = "$" + neto.toLocaleString('es-CL');
-        document.getElementById('res-iva').innerText = "$" + Math.round(neto * 0.19).toLocaleString('es-CL');
-        document.getElementById('res-total').innerText = "$" + Math.round(neto * 1.19).toLocaleString('es-CL');
+        document.getElementById('neto').innerText = "$" + n.toLocaleString('es-CL');
+        document.getElementById('iva').innerText = "$" + Math.round(n * 0.19).toLocaleString('es-CL');
+        document.getElementById('total').innerText = "$" + Math.round(n * 1.19).toLocaleString('es-CL');
     }
-
-    function prepararYImprimir() {
-        const pdfBody = document.getElementById('tabla-pdf-body');
-        pdfBody.innerHTML = '';
-        document.querySelectorAll('.item-card').forEach(card => {
-            const desc = card.querySelector('.desc').value;
-            const qty = card.querySelector('.qty').value;
-            const price = parseFloat(card.querySelector('.price').value) || 0;
-            const total = Math.round(qty * price);
-            pdfBody.innerHTML += `<tr>
-                <td>${desc.replace(/\n/g, '<br>')}</td>
-                <td style="text-align:center;">${qty}</td>
-                <td style="text-align:right;">$${price.toLocaleString('es-CL')}</td>
-                <td style="text-align:right; font-weight:bold;">$${total.toLocaleString('es-CL')}</td>
-            </tr>`;
-        });
-        window.print();
-    }
-
-    function limpiarTodo() {
-        if (confirm("¿Borrar todo?")) {
-            document.querySelectorAll('.clearable').forEach(e => e.value = '');
-            document.getElementById('items-container').innerHTML = '';
-            agregarFila(); calcular();
-        }
-    }
-
-    agregarFila(); // Iniciar con una fila
 </script>
 </body>
 </html>
