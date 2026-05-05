@@ -3,105 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Epysur - Profesional</title>
+    <title>Cotizador Epysur - Mobile Friendly</title>
     <style>
         @page { size: letter; margin: 1cm; }
-        :root { --rojo-epysur: #A61F1F; --gris-claro: #fcfcfc; }
+        :root { --rojo-epysur: #A61F1F; --gris-claro: #fcfcfc; --borde: #eee; }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #555;
-            margin: 0; padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0; padding: 0;
             display: flex; justify-content: center;
         }
 
+        /* Contenedor principal adaptable */
         .page-container {
-            width: 100%; max-width: 8.5in;
+            width: 100%;
+            max-width: 8.5in;
             background: white;
-            padding: 40pt;
+            padding: 20px; /* Padding reducido para móviles */
             box-sizing: border-box;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
-            min-height: 11in;
-            display: flex; flex-direction: column;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
-            display: flex; justify-content: space-between; align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             border-bottom: 3px solid var(--rojo-epysur);
-            padding-bottom: 10pt; margin-bottom: 20pt;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        .logo-img { height: 55pt; width: auto; }
-        .logo-text h1 { color: var(--rojo-epysur); margin: 0; font-size: 22pt; font-weight: 900; }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 45pt; width: auto; }
+        .logo-text h1 { color: var(--rojo-epysur); margin: 0; font-size: 18pt; font-weight: 900; }
         
-        .input-group { margin-bottom: 10pt; }
+        .input-group { margin-bottom: 12px; }
         .input-group label {
-            display: block; font-size: 8pt; font-weight: bold; color: #555;
-            text-transform: uppercase; margin-bottom: 2pt;
+            display: block; font-size: 7.5pt; font-weight: bold; color: #666;
+            text-transform: uppercase; margin-bottom: 4px;
         }
         
         .input-group input, .input-group textarea {
-            width: 100%; border: 1px solid #eee; background: var(--gris-claro);
-            padding: 6pt; font-size: 10pt; font-family: inherit; border-radius: 4px; box-sizing: border-box;
+            width: 100%; border: 1px solid #ddd; background: var(--gris-claro);
+            padding: 10px; font-size: 16px; /* 16px evita el zoom automático en iPhone */
+            font-family: inherit; border-radius: 6px; box-sizing: border-box;
         }
 
-        /* --- ELIMINAR FLECHAS DE NÚMEROS --- */
-        /* Chrome, Safari, Edge, Opera */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        /* Firefox */
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
+        /* Ocultar flechas de números */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
 
-        tr { break-inside: avoid; }
+        /* --- MANEJO DE TABLA RESPONSIVE --- */
         .table-responsive { width: 100%; margin-top: 10pt; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: var(--rojo-epysur); color: white; padding: 10pt; font-size: 9pt; text-align: left; }
-        td { padding: 8pt; border-bottom: 1px solid #eee; vertical-align: top; }
+        
+        /* En móviles, ocultamos el encabezado de la tabla */
+        thead { display: none; }
+        
+        /* Convertimos cada fila en una "tarjeta" en el celular */
+        tr {
+            display: block;
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #fff;
+            position: relative;
+        }
 
-        .no-break { break-inside: avoid; margin-top: 20pt; }
+        td {
+            display: block;
+            padding: 5px 0;
+            text-align: left !important;
+            border: none;
+        }
 
+        /* Etiquetas simuladas para el celular */
+        td::before {
+            content: attr(data-label);
+            display: block;
+            font-size: 7pt;
+            font-weight: bold;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .row-total { font-size: 1.2em; color: var(--rojo-epysur); }
+
+        .btn-delete {
+            position: absolute; top: 10px; right: 10px;
+            background: #ff4d4d; color: white; border: none;
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+        }
+
+        /* --- TOTALES Y RESUMEN --- */
         .summary { 
-            margin-left: auto; width: 220pt; 
-            background: #f9f9f9; padding: 10pt; border-radius: 5px; 
+            margin-top: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px; 
         }
-        .summary-row { display: flex; justify-content: space-between; padding: 4pt 0; font-size: 10pt; }
-        .total-row { border-top: 2px solid var(--rojo-epysur); color: var(--rojo-epysur); font-weight: bold; font-size: 15pt; padding-top: 8pt; }
-
-        .condiciones-stack {
-            display: flex; flex-direction: column; gap: 8pt;
-            border-top: 1px solid #eee; padding-top: 15pt;
-        }
-
-        .footer-note {
-            text-align: center; font-size: 8pt; color: #aaa;
-            padding: 40pt 0 10pt 0; margin-top: auto;
-        }
+        .summary-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 10pt; }
+        .total-row { border-top: 2px solid var(--rojo-epysur); color: var(--rojo-epysur); font-weight: bold; font-size: 16pt; padding-top: 10px; }
 
         .app-controls { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
-            z-index: 1000; display: flex; gap: 10pt;
+            position: sticky; bottom: 0; background: rgba(255,255,255,0.9);
+            padding: 15px; display: flex; gap: 10px; border-top: 1px solid #ddd;
+            margin: 0 -20px -20px -20px;
         }
         
         .btn {
-            background: var(--rojo-epysur); color: white; padding: 10pt 25pt;
-            border: none; border-radius: 50pt; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4pt 15pt rgba(0,0,0,0.4); font-size: 10pt;
+            flex: 1; background: var(--rojo-epysur); color: white; padding: 12px;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;
+        }
+        .btn-secondary { background: #444; }
+
+        /* --- AJUSTES PARA PANTALLAS GRANDES (PC) --- */
+        @media (min-width: 768px) {
+            .page-container { padding: 40pt; margin: 20px; height: auto; }
+            .header { flex-direction: row; align-items: flex-end; }
+            .logo-img { height: 55pt; }
+            .input-container-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; }
+            
+            /* Volver a formato tabla en PC */
+            thead { display: table-header-group; }
+            th { background: var(--rojo-epysur); color: white; padding: 10pt; font-size: 9pt; }
+            tr { display: table-row; border: none; margin: 0; padding: 0; background: none; }
+            td { display: table-cell; padding: 8pt; border-bottom: 1px solid var(--borde); }
+            td::before { display: none; }
+            .btn-delete { position: static; border-radius: 4px; width: auto; height: auto; padding: 5pt 8pt; }
+            .summary { margin-left: auto; width: 220pt; }
+            .app-controls { position: fixed; bottom: 20px; background: none; border: none; width: auto; }
         }
 
-        .btn-secondary { background: #444; }
-        .btn-delete { background: #ff4d4d; color: white; border: none; padding: 5pt 8pt; border-radius: 4px; cursor: pointer; }
-
+        /* --- AJUSTES PARA IMPRESIÓN --- */
         @media print {
             body { background: white; padding: 0; }
             .page-container { box-shadow: none; max-width: 100%; width: 100%; padding: 0; }
             .app-controls, .btn-add, .btn-delete { display: none !important; }
+            thead { display: table-header-group !important; }
+            tr { display: table-row !important; border: none; }
+            td { display: table-cell !important; border-bottom: 1px solid #eee !important; }
+            td::before { display: none !important; }
             .input-group input, .input-group textarea { border: none; background: transparent; padding: 2pt 0; }
-            .header, th, .total-row { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -109,27 +154,27 @@
 
 <div class="page-container">
     <div class="header">
-        <div style="display: flex; align-items: center; gap: 10pt;">
+        <div class="logo-section">
             <img src="logo.png" alt="Logo" class="logo-img">
             <div class="logo-text">
-                <h1>EPYSUR.CL</h1>
-                <p style="margin:0; font-size: 8pt; letter-spacing: 1px; color: #666;">SOLUCIONES DE CALEFACCIÓN</p>
+                <h1>EPYSUR</h1>
+                <p style="margin:0; font-size: 7pt; letter-spacing: 1px; color: #666;">SOLUCIONES PARA TU HOGAR</p>
             </div>
         </div>
-        <div class="input-group" style="text-align: right;">
+        <div class="input-group" style="margin-left: auto;">
             <label>Cotización N°</label>
-            <input type="text" id="n-cotizacion" placeholder="Ej: 2026-001" style="text-align: right; width: 150px; font-weight: bold; color: var(--rojo-epysur);">
+            <input type="text" id="n-cotizacion" placeholder="2026-001" style="font-weight: bold; color: var(--rojo-epysur); text-align: right;">
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-bottom: 20pt;">
+    <div class="input-container-grid">
         <div>
-            <div class="input-group"><label>Nombre / Razón Social</label><input type="text" class="clearable"></div>
+            <div class="input-group"><label>Nombre Cliente</label><input type="text" class="clearable"></div>
             <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatearRut(this)"></div>
         </div>
         <div>
             <div class="input-group"><label>Fecha</label><input type="date" id="fecha"></div>
-            <div class="input-group"><label>Dirección y Comuna</label><input type="text" class="clearable"></div>
+            <div class="input-group"><label>Dirección</label><input type="text" class="clearable"></div>
         </div>
     </div>
 
@@ -137,53 +182,55 @@
         <table id="tabla-items">
             <thead>
                 <tr>
-                    <th style="width: 50%;">Descripción</th>
-                    <th style="text-align:center; width: 10%;">Cant.</th>
-                    <th style="text-align:right; width: 15%;">Unitario</th>
-                    <th style="text-align:right; width: 20%;">Total</th>
-                    <th style="width: 5%;"></th>
+                    <th style="width: 45%;">Descripción</th>
+                    <th style="width: 15%;">Cant.</th>
+                    <th style="width: 20%;">Unitario</th>
+                    <th style="width: 20%;">Total</th>
+                    <th style="width: 40px;"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
-                    <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
-                    <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
-                    <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
-                    <td style="text-align:center;"><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
+                    <td data-label="Descripción">
+                        <textarea oninput="autoExpand(this)" placeholder="Ej: Mantención Caldera..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea>
+                    </td>
+                    <td data-label="Cantidad">
+                        <input type="number" class="qty" value="1" oninput="calcular()">
+                    </td>
+                    <td data-label="Precio Unitario">
+                        <input type="number" class="price" value="0" oninput="calcular()">
+                    </td>
+                    <td data-label="Subtotal Item" class="row-total" style="font-weight:bold; text-align:right;">$0</td>
+                    <td><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:10pt; background:#f0f0f0; border:1px dashed #999; padding:10pt; cursor:pointer; font-weight:bold;">+ AGREGAR ITEM</button>
+    <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:15px; background:#eee; border:1px dashed #999; padding:12px; cursor:pointer; border-radius:8px; font-weight:bold;">+ AÑADIR OTRO ÍTEM</button>
 
     <div class="no-break">
         <div class="summary">
-            <div class="summary-row"><span>Subtotal Neto:</span><span id="res-neto">$0</span></div>
+            <div class="summary-row"><span>Neto:</span><span id="res-neto">$0</span></div>
             <div class="summary-row"><span>IVA (19%):</span><span id="res-iva">$0</span></div>
             <div class="summary-row total-row"><span>TOTAL:</span><span id="res-total">$0</span></div>
         </div>
 
-        <div class="condiciones-stack">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10pt;">
-                <div class="input-group"><label>Forma de Pago</label><input type="text" placeholder="Transferencia" class="clearable"></div>
-                <div class="input-group"><label>Validez</label><input type="text" value="15 días" class="clearable"></div>
-            </div>
-            <div class="input-group">
-                <label>Observaciones</label>
-                <textarea oninput="autoExpand(this)" placeholder="Notas adicionales..." maxlength="1200" class="clearable"></textarea>
+        <div style="margin-top:20px;">
+            <div class="input-group"><label>Forma de Pago</label><input type="text" class="clearable" placeholder="Transferencia"></div>
+            <div class="input-group"><label>Observaciones</label>
+                <textarea oninput="autoExpand(this)" placeholder="Notas..." class="clearable"></textarea>
             </div>
         </div>
     </div>
 
-    <div class="footer-note">
-        Este documento es una cotización informativa y no representa una factura legal.
+    <div style="text-align:center; font-size:8pt; color:#aaa; margin-top:30px; padding-bottom:100px;">
+        Cotización válida por 15 días.
     </div>
 </div>
 
 <div class="app-controls">
-    <button class="btn btn-secondary" onclick="limpiarTodo()">LIMPIAR TODO</button>
+    <button class="btn btn-secondary" onclick="limpiarTodo()">LIMPIAR</button>
     <button class="btn" onclick="window.print()">DESCARGAR PDF</button>
 </div>
 
@@ -204,15 +251,16 @@
     }
 
     function agregarFila() {
-        const table = document.getElementById("tabla-items").getElementsByTagName('tbody')[0];
-        const row = table.insertRow();
+        const tbody = document.querySelector("#tabla-items tbody");
+        const row = document.createElement("tr");
         row.innerHTML = `
-            <td><textarea oninput="autoExpand(this)" placeholder="..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
-            <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
-            <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
-            <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
-            <td style="text-align:center;"><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
+            <td data-label="Descripción"><textarea oninput="autoExpand(this)" placeholder="..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
+            <td data-label="Cantidad"><input type="number" class="qty" value="1" oninput="calcular()"></td>
+            <td data-label="Precio Unitario"><input type="number" class="price" value="0" oninput="calcular()"></td>
+            <td data-label="Subtotal Item" class="row-total" style="font-weight:bold; text-align:right;">$0</td>
+            <td><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
         `;
+        tbody.appendChild(row);
     }
 
     function eliminarFila(btn) {
@@ -223,36 +271,32 @@
     }
 
     function calcular() {
-        let netoAcumulado = 0;
+        let neto = 0;
         document.querySelectorAll("#tabla-items tbody tr").forEach(r => {
             const q = parseFloat(r.querySelector(".qty").value) || 0;
             const p = parseFloat(r.querySelector(".price").value) || 0;
-            const subtotal = Math.round(q * p);
-            r.querySelector(".row-total").innerText = "$" + subtotal.toLocaleString('es-CL');
-            netoAcumulado += subtotal;
+            const sub = Math.round(q * p);
+            r.querySelector(".row-total").innerText = "$" + sub.toLocaleString('es-CL');
+            neto += sub;
         });
-        const ivaTotal = Math.round(netoAcumulado * 0.19);
-        document.getElementById("res-neto").innerText = "$" + netoAcumulado.toLocaleString('es-CL');
-        document.getElementById("res-iva").innerText = "$" + ivaTotal.toLocaleString('es-CL');
-        document.getElementById("res-total").innerText = "$" + (netoAcumulado + ivaTotal).toLocaleString('es-CL');
+        const iva = Math.round(neto * 0.19);
+        document.getElementById("res-neto").innerText = "$" + neto.toLocaleString('es-CL');
+        document.getElementById("res-iva").innerText = "$" + iva.toLocaleString('es-CL');
+        document.getElementById("res-total").innerText = "$" + (neto + iva).toLocaleString('es-CL');
     }
 
     function limpiarTodo() {
-        if (confirm("¿Borrar todos los datos?")) {
-            document.querySelectorAll('.clearable').forEach(el => {
-                el.value = '';
-                if(el.tagName === 'TEXTAREA') el.style.height = 'auto';
-            });
+        if (confirm("¿Limpiar todos los datos?")) {
+            document.querySelectorAll('.clearable').forEach(el => el.value = '');
             document.getElementById('n-cotizacion').value = '';
             document.getElementById('fecha').valueAsDate = new Date();
-            const tbody = document.querySelector("#tabla-items tbody");
-            tbody.innerHTML = `
+            document.querySelector("#tabla-items tbody").innerHTML = `
                 <tr>
-                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
-                    <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
-                    <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
-                    <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
-                    <td style="text-align:center;"><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
+                    <td data-label="Descripción"><textarea oninput="autoExpand(this)" placeholder="..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
+                    <td data-label="Cantidad"><input type="number" class="qty" value="1" oninput="calcular()"></td>
+                    <td data-label="Precio Unitario"><input type="number" class="price" value="0" oninput="calcular()"></td>
+                    <td data-label="Subtotal Item" class="row-total" style="font-weight:bold; text-align:right;">$0</td>
+                    <td><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
                 </tr>
             `;
             calcular();
