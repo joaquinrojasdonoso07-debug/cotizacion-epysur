@@ -59,10 +59,10 @@
             font-family: inherit;
         }
 
-        /* ESTILO PARA 2 LÍNEAS EXACTAS */
+        /* ESTILO PARA OBSERVACIONES - AJUSTADO PARA 3 LÍNEAS */
         .obs-textarea {
             resize: none;
-            height: 38pt; /* Altura suficiente para 2 líneas */
+            height: 52pt; 
             line-height: 1.3;
             overflow: hidden; 
             display: block;
@@ -129,7 +129,7 @@
             .page { box-shadow: none; width: 8.5in; padding: 40pt; }
             .app-controls, .btn-add, .btn-delete { display: none !important; }
             .input-group input, .input-group textarea { border: none; background: transparent; padding: 2pt 0; }
-            .obs-textarea { height: auto; max-height: 38pt; }
+            .obs-textarea { height: auto; max-height: 52pt; }
         }
     </style>
 </head>
@@ -226,7 +226,7 @@
         <div class="input-group"><label>Forma de Pago</label><input type="text" placeholder="Transferencia"></div>
         <div class="input-group">
             <label>Observaciones</label>
-            <textarea id="observaciones" class="obs-textarea" placeholder="Detalles adicionales (máximo 2 líneas)"></textarea>
+            <textarea id="observaciones" class="obs-textarea" maxlength="200" placeholder="Detalles adicionales (máximo 200 caracteres / 3 líneas)"></textarea>
         </div>
         <div class="input-group"><label>Validez de la Cotización</label><input type="text" placeholder="15 días" style="font-weight: bold;"></div>
     </div>
@@ -242,34 +242,6 @@
 
 <script>
     document.getElementById('fecha').valueAsDate = new Date();
-
-    // LÓGICA DE CONTROL ESTRICTO DE 2 LÍNEAS
-    const obs = document.getElementById('observaciones');
-    
-    obs.addEventListener('keydown', function(e) {
-        const lineas = this.value.split('\n');
-        // Bloquear Enter si ya hay 2 líneas
-        if (e.key === "Enter" && lineas.length >= 2) {
-            e.preventDefault();
-        }
-    });
-
-    obs.addEventListener('input', function() {
-        const lineas = this.value.split('\n');
-        
-        // 1. Limitar saltos de línea manuales
-        if (lineas.length > 2) {
-            this.value = lineas.slice(0, 2).join('\n');
-        }
-
-        // 2. Limitar escritura si el texto desborda la altura (3ra línea por longitud)
-        // Agregamos un margen de tolerancia de 2px
-        if (this.scrollHeight > (this.clientHeight + 2)) {
-            while (this.scrollHeight > (this.clientHeight + 2) && this.value.length > 0) {
-                this.value = this.value.slice(0, -1);
-            }
-        }
-    });
 
     function formatearRut(input) {
         let valor = input.value.replace(/\./g, '').replace(/-/g, '');
