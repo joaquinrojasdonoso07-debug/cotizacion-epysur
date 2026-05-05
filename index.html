@@ -5,165 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cotizador Epysur Pro</title>
     <style>
-        :root { 
-            --rojo: #A61F1F; 
-            --fondo: #f4f7f6;
-            --texto: #333;
-            --blanco: #ffffff;
-        }
+        :root { --rojo: #A61F1F; --fondo: #f4f7f6; --texto: #333; --blanco: #ffffff; }
 
-        @page { size: letter; margin: 1cm; }
+        @page { size: letter; margin: 1.5cm; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--fondo);
-            color: var(--texto);
-            margin: 0; padding: 0;
+            background-color: var(--fondo); color: var(--texto); margin: 0; padding: 0;
             display: flex; justify-content: center;
         }
 
-        /* Contenedor tipo App */
         .page-container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--blanco);
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 100px; /* Espacio para botones fijos */
+            width: 100%; max-width: 800px; background: var(--blanco);
+            min-height: 100vh; padding: 20px; box-sizing: border-box;
+            display: flex; flex-direction: column; padding-bottom: 100px;
         }
 
-        /* Cabecera Adaptable */
+        /* Header */
         .header {
-            border-bottom: 3px solid var(--rojo);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            border-bottom: 3px solid var(--rojo); padding-bottom: 15px; margin-bottom: 20px;
+            display: flex; flex-direction: column; gap: 15px;
         }
 
         .logo-box { display: flex; align-items: center; gap: 12px; }
         .logo-img { height: 50px; width: auto; }
         .logo-text h1 { color: var(--rojo); margin: 0; font-size: 22px; font-weight: 900; }
         
-        /* Inputs Estilo Moderno */
         .input-group { margin-bottom: 15px; }
-        .input-group label {
-            display: block; font-size: 11px; font-weight: 700; color: #888;
-            text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px;
-        }
-        
+        .input-group label { display: block; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; margin-bottom: 5px; }
         .input-group input, .input-group textarea {
             width: 100%; border: 1px solid #ddd; background: #fdfdfd;
-            padding: 12px; font-size: 16px; /* Evita zoom en iOS */
-            border-radius: 8px; box-sizing: border-box;
-            transition: border-color 0.3s;
+            padding: 12px; font-size: 16px; border-radius: 8px; box-sizing: border-box;
         }
 
-        .input-group input:focus { border-color: var(--rojo); outline: none; }
-
-        /* Tarjetas de Ítems (Lo que reemplaza a la tabla en móvil) */
+        /* VISTA CELULAR (Tarjetas) */
         .item-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            background: #fff; border: 1px solid #eee; border-radius: 12px;
+            padding: 15px; margin-bottom: 15px; position: relative;
         }
-
-        .item-card-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
+        .item-card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .row-total-box {
-            grid-column: span 2;
-            text-align: right;
-            border-top: 1px dashed #eee;
-            padding-top: 10px;
-            font-weight: 800;
-            color: var(--rojo);
-            font-size: 18px;
+            grid-column: span 2; text-align: right; border-top: 1px dashed #eee;
+            padding-top: 10px; font-weight: 800; color: var(--rojo); font-size: 18px;
         }
-
         .btn-delete {
-            position: absolute; top: -10px; right: -10px;
-            background: #000; color: #fff; border: none;
-            width: 28px; height: 28px; border-radius: 50%;
-            font-weight: bold; cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: absolute; top: -10px; right: -10px; background: #000; color: #fff;
+            border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer;
         }
 
-        /* Resumen de Totales */
-        .summary-box {
-            background: #222; color: #fff;
-            padding: 20px; border-radius: 12px;
-            margin-top: 20px;
-        }
-        .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; opacity: 0.9; }
-        .summary-total { 
-            display: flex; justify-content: space-between; 
-            margin-top: 10px; padding-top: 10px; 
-            border-top: 1px solid #444; font-size: 20px; font-weight: 900; color: #fff;
-        }
+        /* VISTA IMPRESIÓN (Tabla oculta en pantalla) */
+        .print-table { display: none; width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .print-table th { background: var(--rojo); color: white; padding: 8pt; text-align: left; font-size: 10pt; }
+        .print-table td { padding: 8pt; border-bottom: 1px solid #eee; font-size: 10pt; vertical-align: top; }
 
-        /* Botones de Acción (App Style) */
-        .app-bar {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #fff; padding: 15px;
-            display: flex; gap: 10px;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+        /* Resumen */
+        .summary-box { background: #222; color: #fff; padding: 20px; border-radius: 12px; margin-top: 20px; }
+        .summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; font-size: 20px; font-weight: 900; }
 
-        .btn {
-            flex: 1; padding: 15px; border-radius: 10px; border: none;
-            font-weight: 800; font-size: 14px; cursor: pointer;
-            text-transform: uppercase;
-        }
+        .app-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; display: flex; gap: 10px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); z-index: 1000; }
+        .btn { flex: 1; padding: 15px; border-radius: 10px; border: none; font-weight: 800; font-size: 14px; cursor: pointer; }
         .btn-pdf { background: var(--rojo); color: #fff; }
         .btn-clear { background: #eee; color: #666; }
-        .btn-add { 
-            background: #f4f4f4; border: 2px dashed #ccc; color: #666;
-            margin-top: 10px; width: 100%; padding: 15px; border-radius: 10px;
-        }
+        .btn-add { background: #f4f4f4; border: 2px dashed #ccc; color: #666; margin-top: 10px; width: 100%; padding: 15px; border-radius: 10px; }
 
-        /* AJUSTES PARA PC E IMPRESIÓN */
         @media (min-width: 768px) {
-            .page-container { margin: 30px; border-radius: 15px; padding: 50px; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+            .page-container { margin: 30px; border-radius: 15px; padding: 50px; height: auto; }
             .header { flex-direction: row; align-items: flex-end; }
             .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .app-bar { position: static; box-shadow: none; padding: 20px 0; margin-top: 20px; }
+            .app-bar { position: static; box-shadow: none; padding: 20px 0; }
         }
 
+        /* --- MAGIA PARA LA IMPRESIÓN --- */
         @media print {
-            body { background: #fff; }
-            .page-container { padding: 0; box-shadow: none; width: 100%; max-width: 100%; }
-            .app-bar, .btn-add, .btn-delete { display: none !important; }
-            /* Convertir tarjetas a tabla para el PDF */
-            .item-card { border-radius: 0; border: none; border-bottom: 1px solid #eee; margin-bottom: 5px; page-break-inside: avoid; }
-            .row-total-box { font-size: 14px; }
-            input, textarea { border: none !important; background: transparent !important; padding: 2px 0 !important; }
+            html, body { height: auto; background: #fff; margin: 0 !important; }
+            .page-container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+            .app-bar, .btn-add, .btn-delete, #items-container { display: none !important; }
+            
+            /* Mostramos la tabla solo al imprimir */
+            .print-table { display: table !important; }
+            .summary-box { background: transparent !important; color: #000 !important; border: 1px solid #eee; break-inside: avoid; }
+            .summary-total { color: var(--rojo) !important; border-top: 2px solid var(--rojo) !important; }
+            .summary-line { color: #000 !important; }
+            
+            input, textarea { border: none !important; background: transparent !important; padding: 2px 0 !important; font-size: 10pt !important; }
+            .logo-img { height: 60pt !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="page-container">
-    <!-- Header -->
     <div class="header">
         <div class="logo-box">
             <img src="logo.png" alt="Logo" class="logo-img">
             <div class="logo-text">
                 <h1>EPYSUR</h1>
-                <p style="margin:0; font-size: 8px; color: #888; letter-spacing: 1.5px;">SOLUCIONES PARA TU HOGAR</p>
+                <p style="margin:0; font-size: 8px; color: #888;">SOLUCIONES PARA TU HOGAR</p>
             </div>
         </div>
         <div class="input-group" style="margin-left: auto;">
@@ -172,70 +110,53 @@
         </div>
     </div>
 
-    <!-- Datos Cliente -->
     <div class="grid-2">
-        <div class="input-group"><label>Cliente</label><input type="text" class="clearable" placeholder="Nombre completo"></div>
-        <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatearRut(this)" placeholder="12.345.678-9"></div>
+        <div class="input-group"><label>Cliente</label><input type="text" class="clearable"></div>
+        <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatearRut(this)"></div>
         <div class="input-group"><label>Fecha</label><input type="date" id="fecha"></div>
-        <div class="input-group"><label>Dirección / Comuna</label><input type="text" class="clearable" placeholder="Ciudad, Calle #123"></div>
+        <div class="input-group"><label>Dirección</label><input type="text" class="clearable"></div>
     </div>
 
-    <!-- Listado de Ítems -->
-    <div id="items-container">
-        <div class="item-card">
-            <div class="input-group">
-                <label>Descripción del Servicio</label>
-                <textarea rows="2" class="clearable" oninput="autoExpand(this)" placeholder="Ej: Instalación de caldera..."></textarea>
-            </div>
-            <div class="item-card-row">
-                <div class="input-group">
-                    <label>Cantidad</label>
-                    <input type="number" class="qty" value="1" oninput="calcular()">
-                </div>
-                <div class="input-group">
-                    <label>Precio Unitario (Neto)</label>
-                    <input type="number" class="price" value="0" oninput="calcular()">
-                </div>
-            </div>
-            <div class="row-total-box">Total: $0</div>
-            <button class="btn-delete" onclick="eliminarFila(this)">✕</button>
-        </div>
-    </div>
+    <!-- Contenedor de Tarjetas (Solo Celular/PC) -->
+    <div id="items-container"></div>
+    <button class="btn-add" onclick="agregarFila()">+ AGREGAR ITEM</button>
 
-    <button class="btn-add" onclick="agregarFila()">+ AGREGAR OTRO ITEM</button>
+    <!-- Tabla Escondida (Solo para el PDF) -->
+    <table class="print-table" id="tabla-pdf">
+        <thead>
+            <tr>
+                <th style="width: 50%;">Descripción</th>
+                <th style="width: 10%; text-align: center;">Cant.</th>
+                <th style="width: 20%; text-align: right;">Neto Unit.</th>
+                <th style="width: 20%; text-align: right;">Total</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-pdf-body"></tbody>
+    </table>
 
-    <!-- Resumen -->
     <div class="summary-box">
         <div class="summary-line"><span>Subtotal Neto:</span><span id="res-neto">$0</span></div>
         <div class="summary-line"><span>IVA (19%):</span><span id="res-iva">$0</span></div>
         <div class="summary-total"><span>TOTAL:</span><span id="res-total">$0</span></div>
     </div>
 
-    <!-- Notas -->
     <div style="margin-top: 20px;">
-        <div class="input-group"><label>Forma de Pago</label><input type="text" class="clearable" placeholder="Transferencia / Crédito"></div>
-        <div class="input-group"><label>Observaciones Adicionales</label><textarea class="clearable" placeholder="Escriba aquí..."></textarea></div>
+        <div class="input-group"><label>Forma de Pago</label><input type="text" class="clearable" placeholder="Transferencia"></div>
+        <div class="input-group"><label>Observaciones</label><textarea class="clearable" oninput="autoExpand(this)"></textarea></div>
     </div>
 
-    <div style="text-align: center; color: #bbb; font-size: 10px; margin-top: 30px;">
-        Válido por 15 días desde la fecha de emisión.
-    </div>
+    <div style="text-align: center; color: #bbb; font-size: 10px; margin-top: 30px;">Válido por 15 días.</div>
 </div>
 
-<!-- Botonera Fija Celular -->
 <div class="app-bar">
     <button class="btn btn-clear" onclick="limpiarTodo()">Limpiar</button>
-    <button class="btn btn-pdf" onclick="window.print()">Descargar PDF</button>
+    <button class="btn btn-pdf" onclick="prepararYImprimir()">Descargar PDF</button>
 </div>
 
 <script>
     document.getElementById('fecha').valueAsDate = new Date();
 
-    function autoExpand(t) {
-        t.style.height = 'auto';
-        t.style.height = t.scrollHeight + 'px';
-    }
-
+    function autoExpand(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
     function formatearRut(i) {
         let v = i.value.replace(/\./g, '').replace(/-/g, '');
         if (v.length < 2) return;
@@ -248,31 +169,14 @@
         const div = document.createElement('div');
         div.className = 'item-card';
         div.innerHTML = `
-            <div class="input-group">
-                <label>Descripción del Servicio</label>
-                <textarea rows="2" class="clearable" oninput="autoExpand(this)" placeholder="..."></textarea>
-            </div>
+            <div class="input-group"><label>Descripción</label><textarea rows="2" class="desc clearable" oninput="autoExpand(this)"></textarea></div>
             <div class="item-card-row">
-                <div class="input-group">
-                    <label>Cantidad</label>
-                    <input type="number" class="qty" value="1" oninput="calcular()">
-                </div>
-                <div class="input-group">
-                    <label>Precio Unitario (Neto)</label>
-                    <input type="number" class="price" value="0" oninput="calcular()">
-                </div>
+                <div class="input-group"><label>Cant.</label><input type="number" class="qty" value="1" oninput="calcular()"></div>
+                <div class="input-group"><label>Precio</label><input type="number" class="price" value="0" oninput="calcular()"></div>
             </div>
             <div class="row-total-box">Total: $0</div>
-            <button class="btn-delete" onclick="eliminarFila(this)">✕</button>
-        `;
+            <button class="btn-delete" onclick="this.parentElement.remove(); calcular();">✕</button>`;
         document.getElementById('items-container').appendChild(div);
-    }
-
-    function eliminarFila(b) {
-        if (document.querySelectorAll('.item-card').length > 1) {
-            b.parentElement.remove();
-            calcular();
-        }
     }
 
     function calcular() {
@@ -284,40 +188,38 @@
             card.querySelector('.row-total-box').innerText = "Total: $" + sub.toLocaleString('es-CL');
             neto += sub;
         });
-        const iva = Math.round(neto * 0.19);
         document.getElementById('res-neto').innerText = "$" + neto.toLocaleString('es-CL');
-        document.getElementById('res-iva').innerText = "$" + iva.toLocaleString('es-CL');
-        document.getElementById('res-total').innerText = "$" + (neto + iva).toLocaleString('es-CL');
+        document.getElementById('res-iva').innerText = "$" + Math.round(neto * 0.19).toLocaleString('es-CL');
+        document.getElementById('res-total').innerText = "$" + Math.round(neto * 1.19).toLocaleString('es-CL');
+    }
+
+    function prepararYImprimir() {
+        const pdfBody = document.getElementById('tabla-pdf-body');
+        pdfBody.innerHTML = '';
+        document.querySelectorAll('.item-card').forEach(card => {
+            const desc = card.querySelector('.desc').value;
+            const qty = card.querySelector('.qty').value;
+            const price = parseFloat(card.querySelector('.price').value) || 0;
+            const total = Math.round(qty * price);
+            pdfBody.innerHTML += `<tr>
+                <td>${desc.replace(/\n/g, '<br>')}</td>
+                <td style="text-align:center;">${qty}</td>
+                <td style="text-align:right;">$${price.toLocaleString('es-CL')}</td>
+                <td style="text-align:right; font-weight:bold;">$${total.toLocaleString('es-CL')}</td>
+            </tr>`;
+        });
+        window.print();
     }
 
     function limpiarTodo() {
-        if (confirm("¿Borrar todos los datos?")) {
+        if (confirm("¿Borrar todo?")) {
             document.querySelectorAll('.clearable').forEach(e => e.value = '');
-            document.getElementById('n-cotiz').value = '';
-            document.getElementById('fecha').valueAsDate = new Date();
-            document.getElementById('items-container').innerHTML = `
-                <div class="item-card">
-                    <div class="input-group">
-                        <label>Descripción del Servicio</label>
-                        <textarea rows="2" class="clearable" oninput="autoExpand(this)" placeholder="Ej: Instalación de caldera..."></textarea>
-                    </div>
-                    <div class="item-card-row">
-                        <div class="input-group">
-                            <label>Cantidad</label>
-                            <input type="number" class="qty" value="1" oninput="calcular()">
-                        </div>
-                        <div class="input-group">
-                            <label>Precio Unitario (Neto)</label>
-                            <input type="number" class="price" value="0" oninput="calcular()">
-                        </div>
-                    </div>
-                    <div class="row-total-box">Total: $0</div>
-                    <button class="btn-delete" onclick="eliminarFila(this)">✕</button>
-                </div>`;
-            calcular();
-            window.scrollTo(0,0);
+            document.getElementById('items-container').innerHTML = '';
+            agregarFila(); calcular();
         }
     }
+
+    agregarFila(); // Iniciar con una fila
 </script>
 </body>
 </html>
