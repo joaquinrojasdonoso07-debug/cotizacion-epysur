@@ -5,16 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cotizador Epysur - Profesional</title>
     <style>
-        /* Configuración de página para impresión */
-        @page { 
-            size: letter; 
-            margin: 1cm; 
-        }
-
-        :root { 
-            --rojo-epysur: #A61F1F; 
-            --gris-claro: #fcfcfc; 
-        }
+        @page { size: letter; margin: 1cm; }
+        :root { --rojo-epysur: #A61F1F; --gris-claro: #fcfcfc; }
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -23,7 +15,6 @@
             display: flex; justify-content: center;
         }
 
-        /* Contenedor con flujo continuo para múltiples páginas */
         .page-container {
             width: 100%; max-width: 8.5in;
             background: white;
@@ -31,8 +22,7 @@
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(0,0,0,0.3);
             min-height: 11in;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
         }
 
         .header {
@@ -55,19 +45,25 @@
             padding: 6pt; font-size: 10pt; font-family: inherit; border-radius: 4px; box-sizing: border-box;
         }
 
-        /* Evita que las filas se partan entre páginas */
-        tr { break-inside: avoid; }
+        /* --- ELIMINAR FLECHAS DE NÚMEROS --- */
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
 
+        tr { break-inside: avoid; }
         .table-responsive { width: 100%; margin-top: 10pt; }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--rojo-epysur); color: white; padding: 10pt; font-size: 9pt; text-align: left; }
         td { padding: 8pt; border-bottom: 1px solid #eee; vertical-align: top; }
 
-        /* Bloque de resumen y observaciones que no debe dividirse */
-        .no-break {
-            break-inside: avoid;
-            margin-top: 20pt;
-        }
+        .no-break { break-inside: avoid; margin-top: 20pt; }
 
         .summary { 
             margin-left: auto; width: 220pt; 
@@ -86,7 +82,6 @@
             padding: 40pt 0 10pt 0; margin-top: auto;
         }
 
-        /* Controles inferiores flotantes */
         .app-controls { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
             z-index: 1000; display: flex; gap: 10pt;
@@ -96,12 +91,9 @@
             background: var(--rojo-epysur); color: white; padding: 10pt 25pt;
             border: none; border-radius: 50pt; font-weight: bold; cursor: pointer;
             box-shadow: 0 4pt 15pt rgba(0,0,0,0.4); font-size: 10pt;
-            transition: transform 0.2s;
         }
-        .btn:active { transform: scale(0.95); }
 
         .btn-secondary { background: #444; }
-
         .btn-delete { background: #ff4d4d; color: white; border: none; padding: 5pt 8pt; border-radius: 4px; cursor: pointer; }
 
         @media print {
@@ -116,7 +108,6 @@
 <body>
 
 <div class="page-container">
-    <!-- Encabezado -->
     <div class="header">
         <div style="display: flex; align-items: center; gap: 10pt;">
             <img src="logo.png" alt="Logo" class="logo-img">
@@ -131,11 +122,10 @@
         </div>
     </div>
 
-    <!-- Datos del Cliente -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-bottom: 20pt;">
         <div>
             <div class="input-group"><label>Nombre / Razón Social</label><input type="text" class="clearable"></div>
-            <div class="input-group"><label>RUT</label><input type="text" class="clearable" id="rut-input" oninput="formatearRut(this)"></div>
+            <div class="input-group"><label>RUT</label><input type="text" class="clearable" oninput="formatearRut(this)"></div>
         </div>
         <div>
             <div class="input-group"><label>Fecha</label><input type="date" id="fecha"></div>
@@ -143,7 +133,6 @@
         </div>
     </div>
 
-    <!-- Tabla de Items -->
     <div class="table-responsive">
         <table id="tabla-items">
             <thead>
@@ -157,7 +146,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción del producto..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
+                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
                     <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
                     <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
                     <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
@@ -169,7 +158,6 @@
 
     <button class="btn-add" onclick="agregarFila()" style="width:100%; margin-top:10pt; background:#f0f0f0; border:1px dashed #999; padding:10pt; cursor:pointer; font-weight:bold;">+ AGREGAR ITEM</button>
 
-    <!-- Resumen y Observaciones -->
     <div class="no-break">
         <div class="summary">
             <div class="summary-row"><span>Subtotal Neto:</span><span id="res-neto">$0</span></div>
@@ -183,8 +171,8 @@
                 <div class="input-group"><label>Validez</label><input type="text" value="15 días" class="clearable"></div>
             </div>
             <div class="input-group">
-                <label>Observaciones (Se expande si escribe más)</label>
-                <textarea oninput="autoExpand(this)" placeholder="Notas adicionales sobre la instalación o servicio..." maxlength="1200" class="clearable"></textarea>
+                <label>Observaciones</label>
+                <textarea oninput="autoExpand(this)" placeholder="Notas adicionales..." maxlength="1200" class="clearable"></textarea>
             </div>
         </div>
     </div>
@@ -200,16 +188,13 @@
 </div>
 
 <script>
-    // Establecer fecha por defecto
     document.getElementById('fecha').valueAsDate = new Date();
 
-    // Función para que los textareas crezcan según el contenido
     function autoExpand(textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
     }
 
-    // Formateador de RUT Chileno
     function formatearRut(input) {
         let valor = input.value.replace(/\./g, '').replace(/-/g, '');
         if (valor.length < 2) return;
@@ -218,7 +203,6 @@
         input.value = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "-" + dv;
     }
 
-    // Agregar nueva fila a la tabla
     function agregarFila() {
         const table = document.getElementById("tabla-items").getElementsByTagName('tbody')[0];
         const row = table.insertRow();
@@ -231,17 +215,13 @@
         `;
     }
 
-    // Eliminar fila
     function eliminarFila(btn) {
         if (document.querySelectorAll("#tabla-items tbody tr").length > 1) {
             btn.closest('tr').remove();
             calcular();
-        } else {
-            alert("La cotización debe tener al menos un item.");
         }
     }
 
-    // Cálculos de impuestos y totales
     function calcular() {
         let netoAcumulado = 0;
         document.querySelectorAll("#tabla-items tbody tr").forEach(r => {
@@ -257,34 +237,25 @@
         document.getElementById("res-total").innerText = "$" + (netoAcumulado + ivaTotal).toLocaleString('es-CL');
     }
 
-    // Resetear formulario completo
     function limpiarTodo() {
-        if (confirm("¿Estás seguro de que deseas borrar todos los datos? Esta acción no se puede deshacer.")) {
-            // Limpiar todos los campos con clase 'clearable'
+        if (confirm("¿Borrar todos los datos?")) {
             document.querySelectorAll('.clearable').forEach(el => {
                 el.value = '';
                 if(el.tagName === 'TEXTAREA') el.style.height = 'auto';
             });
-
-            // Resetear Número de cotización y Fecha
             document.getElementById('n-cotizacion').value = '';
             document.getElementById('fecha').valueAsDate = new Date();
-
-            // Resetear la tabla a una sola fila limpia
             const tbody = document.querySelector("#tabla-items tbody");
             tbody.innerHTML = `
                 <tr>
-                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción del producto..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
+                    <td><textarea oninput="autoExpand(this)" placeholder="Descripción..." style="border:none; width:100%; background:transparent; resize:none;" class="clearable"></textarea></td>
                     <td><input type="number" class="qty" value="1" oninput="calcular()" style="text-align:center;"></td>
                     <td><input type="number" class="price" value="0" oninput="calcular()" style="text-align:right;"></td>
                     <td class="row-total" style="text-align:right; font-weight:bold;">$0</td>
                     <td style="text-align:center;"><button class="btn-delete" onclick="eliminarFila(this)">✕</button></td>
                 </tr>
             `;
-
-            // Reiniciar contadores de dinero
             calcular();
-            window.scrollTo(0, 0);
         }
     }
 </script>
